@@ -29,6 +29,11 @@ module ActiveEncryption
             define_method "#{name}" do
               message = super()
 
+              unless message
+                ciphertext = send(encrypted_attribute)
+                message = ActiveEncryption.service.decrypt(ciphertext, self.class.table_name, encrypted_attribute)
+              end
+
               # Set previous attribute on first decrypt
               @attributes[name.to_s].instance_variable_set("@value_before_type_cast", message)
 
@@ -42,6 +47,8 @@ module ActiveEncryption
             end
 
             define_singleton_method class_method_name do |message, **opts|
+              #ActiveEncryption.service.encrypt(message, table_name, encrypted_attribute)
+
               key = KeyGenerator.new("master").attribute_key(table: table_name, attribute: encrypted_attribute)
               ciphertext = Encryptor.new(key).encrypt(message)
               Base64.strict_encode64(ciphertext)

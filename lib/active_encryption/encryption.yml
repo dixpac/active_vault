@@ -1,0 +1,3 @@
+local:
+  service: Local
+  master_key: "0000000000000000"

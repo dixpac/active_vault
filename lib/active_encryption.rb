@@ -9,5 +9,9 @@ require "active_encryption/railtie"
 
 
 module ActiveEncryption
-  # Your code goes here...
+  extend ActiveSupport::Autoload
+
+  autoload :Service
+
+  mattr_accessor :service
 end
