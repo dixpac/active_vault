@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ActiveEncryption
+module ActiveVault
   module Model
     extend ActiveSupport::Concern
 
@@ -31,7 +31,7 @@ module ActiveEncryption
 
               unless message
                 ciphertext = send(encrypted_attribute)
-                message = ActiveEncryption.service.decrypt(ciphertext, self.class.table_name, encrypted_attribute)
+                message = ActiveVault.service.decrypt(ciphertext, self.class.table_name, encrypted_attribute)
               end
 
               # Set previous attribute on first decrypt
@@ -47,7 +47,7 @@ module ActiveEncryption
             end
 
             define_singleton_method class_method_name do |message, **opts|
-              ActiveEncryption.service.encrypt(message, table_name, encrypted_attribute)
+              ActiveVault.service.encrypt(message, table_name, encrypted_attribute)
             end
           end
         end

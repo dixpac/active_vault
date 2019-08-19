@@ -1,4 +1,4 @@
-module ActiveEncryption
+module ActiveVault
   class Service::LocalService < Service
     attr_reader :master_key
 

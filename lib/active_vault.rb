@@ -2,12 +2,12 @@ require "active_record"
 require "active_support"
 require "active_support/rails"
 
-require "active_encryption/version"
-require "active_encryption/errors"
-require "active_encryption/railtie"
+require "active_vault/version"
+require "active_vault/errors"
+require "active_vault/railtie"
 
 
-module ActiveEncryption
+module ActiveVault
   extend ActiveSupport::Autoload
 
   autoload :KeyGenerator

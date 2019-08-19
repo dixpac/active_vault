@@ -1,12 +1,12 @@
 $:.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
-require "active_encryption/version"
+require "active_vault/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
-  spec.name        = "active_encryption"
-  spec.version     = ActiveEncryption::VERSION
+  spec.name        = "active_vault"
+  spec.version     = ActiveVault::VERSION
   spec.authors     = ["Dino Maric"]
   spec.email       = ["dino.onex@gmail.com"]
   spec.homepage    = "https://rubyonrails.org/"

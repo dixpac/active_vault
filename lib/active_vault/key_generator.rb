@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "openssl"
 
-module ActiveEncryption
+module ActiveVault
   class KeyGenerator
     def initialize(master_key)
       @master_key = master_key

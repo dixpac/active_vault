@@ -1,4 +1,4 @@
-# ActiveEncryption
+# ActivtEncryption
 Short description and motivation.
 
 ## Usage

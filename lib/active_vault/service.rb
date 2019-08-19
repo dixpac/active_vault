@@ -1,4 +1,4 @@
-module ActiveEncryption
+module ActiveVault
   class Service
     extend ActiveSupport::Autoload
     autoload :Configurator

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ActiveEncryption::Test < ActiveSupport::TestCase
+class ActiveVault::Test < ActiveSupport::TestCase
   test "encryption and decryption works" do
     email = "dino@example.org"
     person = Person.create!(email: email)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ActiveEncryption
+module ActiveVault
   class Cipher
     def initialize(key)
       raise ArgumentError, "Key must be 32 bytes" unless key && key.bytesize == 32
