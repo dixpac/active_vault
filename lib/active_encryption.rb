@@ -3,6 +3,7 @@ require "active_support"
 require "active_support/rails"
 
 require "active_encryption/version"
+require "active_encryption/errors"
 require "active_encryption/railtie"
 
 
