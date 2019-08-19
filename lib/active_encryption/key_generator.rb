@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "openssl"
 
 module ActiveEncryption
   class KeyGenerator
@@ -15,11 +16,8 @@ module ActiveEncryption
     end
 
     private
+      # TODO: Use ruby OpenSSL.KDF.hkdf istead
       def hkdf(ikm, salt:, info:, length:, hash:)
-        if defined?(OpenSSL::KDF.hkdf)
-          return OpenSSL::KDF.hkdf(ikm, salt: salt, info: info, length: length, hash: hash)
-        end
-
         prk = hash_hmac(hash, ikm, salt)
 
         # empty binary string

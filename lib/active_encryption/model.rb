@@ -47,11 +47,7 @@ module ActiveEncryption
             end
 
             define_singleton_method class_method_name do |message, **opts|
-              #ActiveEncryption.service.encrypt(message, table_name, encrypted_attribute)
-
-              key = KeyGenerator.new("master").attribute_key(table: table_name, attribute: encrypted_attribute)
-              ciphertext = Encryptor.new(key).encrypt(message)
-              Base64.strict_encode64(ciphertext)
+              ActiveEncryption.service.encrypt(message, table_name, encrypted_attribute)
             end
           end
         end
