@@ -11,7 +11,7 @@ module ActiveEncryption
       @key = key
     end
 
-    def encrypt(message)
+    def encrypt(plaintext)
       nonce = generate_nonce
       cipher = OpenSSL::Cipher.new("aes-256-gcm")
       cipher.encrypt
@@ -19,7 +19,7 @@ module ActiveEncryption
       cipher.iv = nonce
       cipher.auth_data = ""
 
-      ciphertext = cipher.update(message) + cipher.final
+      ciphertext = cipher.update(plaintext) + cipher.final
       ciphertext << cipher.auth_tag
 
       Base64.strict_encode64(nonce + ciphertext)
