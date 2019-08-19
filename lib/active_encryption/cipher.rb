@@ -3,7 +3,7 @@
 module ActiveEncryption
   class DecryptionError < StandardError; end
 
-  class Encryptor
+  class Cipher
     def initialize(key)
       raise ArgumentError, "Key must be 32 bytes" unless key && key.bytesize == 32
       raise ArgumentError, "Key must be binary" unless key.encoding == Encoding::BINARY
