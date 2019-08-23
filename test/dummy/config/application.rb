@@ -10,8 +10,7 @@ module Dummy
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
-    #config.active_vault.service = :local
-    config.active_vault.service = :aws
+    config.active_vault.service = :local
   end
 end
 
