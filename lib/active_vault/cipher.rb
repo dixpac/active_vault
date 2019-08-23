@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 module ActiveVault
+  # Implements encryption and decryption using `aes-256-gcm` algorithm.
+  # Encrypted attributes pass trought this class when they are encrypted or
+  # decrypted.
+  #
+  # Provided +key+ is a randomly generated 32-byte long key for each db row.
   class Cipher
     def initialize(key)
       raise ArgumentError, "Key must be 32 bytes" unless key && key.bytesize == 32

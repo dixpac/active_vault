@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_15_082724) do
+ActiveRecord::Schema.define(version: 2019_08_20_114754) do
 
   create_table "people", force: :cascade do |t|
     t.text "email_ciphertext"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "encrypted_vault_key"
   end
 
 end
