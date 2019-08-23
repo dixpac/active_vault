@@ -18,7 +18,3 @@ rescue Errno::ENOENT
   puts "Missing service configuration file in test/service/configurations.yml"
   {}
 end
-
-class Person < ApplicationRecord
-  encrypts :email
-end
