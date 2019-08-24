@@ -33,14 +33,17 @@ module ActiveVault
             #
             #   Person.create(email: "dino@exmaple.org") => encrypts eamil.
             define_method "#{name}=" do |message|
+              plaintext_key = EncryptionKey.for self
+
+              if self.encrypted_vault_key.blank?
+                encrypted_key = ActiveVault.service.encrypt(plaintext_key)
+                self.encrypted_vault_key = encrypted_key
+              end
+
               ciphertext = if message.blank?
                 message
               else
-                key = generate_random_key
-                encrypted_key = ActiveVault.service.encrypt(key)
-
-                self.encrypted_vault_key = encrypted_key
-                self.class.send(class_method_name, key, message)
+                self.class.send(class_method_name, plaintext_key, message)
               end
 
               send("#{encrypted_attribute}=", ciphertext)
@@ -74,17 +77,6 @@ module ActiveVault
 
             define_singleton_method class_method_name do |key, message, **opts|
               Cipher.new(key).encrypt(message)
-            end
-
-            # Generates random 32-bytes long key that will encrypt/decrypt
-            # attributes. Each db record gets it's own key.
-            # This key is then encrypted with KMS and stored inside `encrypted_vault_key`
-            # column.
-            #
-            # Key must be 32-bytes long since aes-256-gcm requires key that
-            # length.
-            def generate_random_key
-              SecureRandom.random_bytes(32)
             end
           end
         end

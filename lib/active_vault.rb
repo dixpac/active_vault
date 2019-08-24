@@ -10,7 +10,7 @@ require "active_vault/railtie"
 module ActiveVault
   extend ActiveSupport::Autoload
 
-  autoload :KeyGenerator
+  autoload :EncryptionKey
   autoload :Cipher
   autoload :Service
 
