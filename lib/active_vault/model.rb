@@ -18,7 +18,7 @@ module ActiveVault
       #   * `email_ciphertext` - stored encrypted vaule
       #   * `encrypted_vault_key` - key that knows how to decrypt attributes
       #      This key is encrypted with configured +ActiveVault::Service+, and
-      #      server as a backbone to envelope encryption.
+      #      serves as a backbone to envelope encryption.
       def encrypts(*attributes, encode: true, **options)
         attributes.each do |name|
           encrypted_attribute = "#{name}_ciphertext"
@@ -28,9 +28,9 @@ module ActiveVault
             attribute name, :string
 
             # Defines setter for virtual attribute. This method performs
-            # encryption of plaintext and stored `encrypted_vault_key`
+            # encryption of plaintext and handles `encrypted_vault_key`
             #
-            #   Person.create(email: "dino@exmaple.org") => encrypts eamil.
+            #   Person.create(email: "dino@exmaple.org") => encrypts email
             define_method "#{name}=" do |value|
               plaintext_key = EncryptionKey.for self
 

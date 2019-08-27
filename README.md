@@ -1,28 +1,29 @@
-# ActivtEncryption
-Short description and motivation.
+**building...**
+Easy way to encrypt database columns and file uploads in Rails.
 
-## Usage
-How to use my plugin.
-
-## Installation
-Add this line to your application's Gemfile:
+# Example
 
 ```ruby
-gem 'active_encryption'
+# config/vault.yml
+amazon:
+ service: Aws
+ key_id: "..."
+ access_key: "..."
+ secret_access: "..."
 ```
 
-And then execute:
-```bash
-$ bundle
+```ruby
+# model
+class Person < ApplicationRecord
+  encrypts :email
+end
 ```
 
-Or install it yourself as:
-```bash
-$ gem install active_encryption
+```ruby
+# db schema
+create_table "people", force: :cascade do |t|
+  t.text "email_ciphertext"
+  t.text "encrypted_vault_key"
+   ...
+end
 ```
-
-## Contributing
-Contribution directions go here.
-
-## License
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
