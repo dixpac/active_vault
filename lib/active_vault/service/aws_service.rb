@@ -17,18 +17,15 @@ module ActiveVault
     def encrypt(plaintext)
       options = {
         key_id: key_id,
-        plaintext: Base64.encode64(plaintext)
+        plaintext: encode64(plaintext)
       }
 
       ciphertext = client.encrypt(options).ciphertext_blob
 
-      "v#{1}:#{encode64(ciphertext)}"
+      encode64(ciphertext)
     end
 
     def decrypt(ciphertext)
-      m = /\Av(\d+):/.match(ciphertext)
-      version = m[1].to_i
-      ciphertext = ciphertext.sub("v#{version}:", "")
       ciphertext = decode64(ciphertext)
 
 
