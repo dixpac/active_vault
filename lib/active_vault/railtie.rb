@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActiveVault
   class Railtie < ::Rails::Railtie
     config.active_vault = ActiveSupport::OrderedOptions.new
