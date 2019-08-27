@@ -14,6 +14,8 @@ class ActiveVault::PeronTest < ActiveSupport::TestCase
     assert @person.encrypted_vault_key
     @person.reload
     assert_equal @email, @person.email
+
+    @person.rotate_vault_key!
   end
 
   test "when updating encrypted attribute encyption work base on already stored key" do
@@ -26,5 +28,17 @@ class ActiveVault::PeronTest < ActiveSupport::TestCase
     assert_equal new_email, @person.email
     assert_not_equal @person.email_ciphertext, ciphertext
     assert_equal @person.encrypted_vault_key, key
+  end
+
+  test "when executing rotate_vault_key! if changes encryption key and re-encrypts data with the new key" do
+    old_key = @person.encrypted_vault_key
+    old_ciphertext = @person.email_ciphertext
+    old_plaintext = @person.email
+
+    @person.rotate_vault_key!
+
+    refute_equal @person.encrypted_vault_key, old_key
+    refute_equal @person.email_ciphertext, old_ciphertext
+    assert_equal @person.email, old_plaintext
   end
 end

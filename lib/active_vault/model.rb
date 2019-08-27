@@ -82,5 +82,31 @@ module ActiveVault
         end
       end
     end
+
+    # Rotates encryption key on the record. Generate the new key and encrypts
+    # record wit the new key
+    #
+    #   @person.rotate_vault_key!
+    def rotate_vault_key!
+      vault_attributes = self.class.attribute_names.find_all { |el| el.include?("ciphertext") }
+      return if vault_attributes.blank?
+
+      clear_encryption_key
+      re_encrypt vault_attributes
+
+      save!
+    end
+
+    private
+      def clear_encryption_key
+        self.encrypted_vault_key = nil
+      end
+
+      def re_encrypt(attributes)
+        attributes.each do |attr|
+          value = send("#{attr.chomp("_ciphertext")}")
+          send("#{attr}=", value)
+        end
+      end
   end
 end
