@@ -23,7 +23,6 @@ module ActiveVault
         attributes.each do |name|
           encrypted_attribute = "#{name}_ciphertext"
           name = name.to_sym
-          class_method_name = "generate_#{encrypted_attribute}"
 
           class_eval do
             attribute name, :string
@@ -32,7 +31,7 @@ module ActiveVault
             # encryption of plaintext and stored `encrypted_vault_key`
             #
             #   Person.create(email: "dino@exmaple.org") => encrypts eamil.
-            define_method "#{name}=" do |message|
+            define_method "#{name}=" do |value|
               plaintext_key = EncryptionKey.for self
 
               if self.encrypted_vault_key.blank?
@@ -40,43 +39,29 @@ module ActiveVault
                 self.encrypted_vault_key = encrypted_key
               end
 
-              ciphertext = if message.blank?
-                message
-              else
-                self.class.send(class_method_name, plaintext_key, message)
-              end
-
+              ciphertext = encrypt key: plaintext_key, value: value
               send("#{encrypted_attribute}=", ciphertext)
 
-              super(message)
+              super(value)
             end
 
             # Defines getter method. This method decrypts stored value.
             #
             #   person.email  => "dino@example.org"
             define_method "#{name}" do
-              message = super()
-
-              unless message
-                ciphertext = send(encrypted_attribute)
-                key = ActiveVault.service.decrypt(self.encrypted_vault_key)
-                message= Cipher.new(key).decrypt(ciphertext)
-              end
+              value = super()
+              value = decrypt attribute: encrypted_attribute unless value
 
               # Set previous attribute on first decrypt
-              @attributes[name.to_s].instance_variable_set("@value_before_type_cast", message)
+              @attributes[name.to_s].instance_variable_set("@value_before_type_cast", value)
 
               if respond_to?(:_write_attribute, true)
-                _write_attribute(name, message)
+                _write_attribute(name, value)
               else
-                raw_write_attribute(name, message)
+                raw_write_attribute(name, value)
               end
 
-              message
-            end
-
-            define_singleton_method class_method_name do |key, message, **opts|
-              Cipher.new(key).encrypt(message)
+              value
             end
           end
         end
@@ -98,6 +83,18 @@ module ActiveVault
     end
 
     private
+      def encrypt(key:, value:)
+        return unless value
+        Cipher.new(key).encrypt(value)
+      end
+
+      def decrypt(attribute:)
+        key = ActiveVault.service.decrypt(encrypted_vault_key)
+        ciphertext = send(attribute)
+
+        Cipher.new(key).decrypt(ciphertext)
+      end
+
       def clear_encryption_key
         self.encrypted_vault_key = nil
       end
