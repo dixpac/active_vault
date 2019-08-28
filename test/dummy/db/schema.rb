@@ -13,10 +13,10 @@
 ActiveRecord::Schema.define(version: 2019_08_20_114754) do
 
   create_table "people", force: :cascade do |t|
-    t.text "email_ciphertext"
+    t.text "email_encrypted"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "encrypted_vault_key"
+    t.text "encrypted_key"
   end
 
 end

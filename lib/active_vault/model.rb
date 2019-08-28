@@ -15,29 +15,25 @@ module ActiveVault
       #
       # This exposes +email+ virtual attribute that must be backed with 2 database
       # columns:
-      #   * `email_ciphertext` - stored encrypted vaule
-      #   * `encrypted_vault_key` - key that knows how to decrypt attributes
+      #   * `email_encrypted` - stored encrypted vaule
+      #   * `encrypted_key` - key that knows how to decrypt attributes
       #      This key is encrypted with configured +ActiveVault::Service+, and
       #      serves as a backbone to envelope encryption.
       def encrypts(*attributes, encode: true, **options)
         attributes.each do |name|
-          encrypted_attribute = "#{name}_ciphertext"
+          encrypted_attribute = "#{name}_encrypted"
           name = name.to_sym
 
           class_eval do
             attribute name, :string
 
             # Defines setter for virtual attribute. This method performs
-            # encryption of plaintext and handles `encrypted_vault_key`
+            # encryption of plaintext and handles `encrypted_key`
             #
             #   Person.create(email: "dino@exmaple.org") => encrypts email
             define_method "#{name}=" do |value|
               plaintext_key = EncryptionKey.for self
-
-              if self.encrypted_vault_key.blank?
-                encrypted_key = ActiveVault.service.encrypt(plaintext_key)
-                self.encrypted_vault_key = encrypted_key
-              end
+              self.encrypted_key = ActiveVault.service.encrypt(plaintext_key) if self.encrypted_key.blank?
 
               ciphertext = encrypt key: plaintext_key, value: value
               send("#{encrypted_attribute}=", ciphertext)
@@ -71,9 +67,9 @@ module ActiveVault
     # Rotates encryption key on the record. Generate the new key and encrypts
     # record wit the new key
     #
-    #   @person.rotate_vault_key!
-    def rotate_vault_key!
-      vault_attributes = self.class.attribute_names.find_all { |el| el.include?("ciphertext") }
+    #   @person.rotate_key!
+    def rotate_key!
+      vault_attributes = self.class.attribute_names.find_all { |el| el.include?("_encrypted") }
       return if vault_attributes.blank?
 
       clear_encryption_key
@@ -89,19 +85,19 @@ module ActiveVault
       end
 
       def decrypt(attribute:)
-        key = ActiveVault.service.decrypt(encrypted_vault_key)
+        key = ActiveVault.service.decrypt(encrypted_key)
         ciphertext = send(attribute)
 
         Cipher.new(key).decrypt(ciphertext)
       end
 
       def clear_encryption_key
-        self.encrypted_vault_key = nil
+        self.encrypted_key = nil
       end
 
       def re_encrypt(attributes)
         attributes.each do |attr|
-          value = send("#{attr.chomp("_ciphertext")}")
+          value = send("#{attr.chomp("_encrypted")}")
           send("#{attr}=", value)
         end
       end

@@ -16,8 +16,8 @@ module ActiveVault
     end
 
     def plaintext
-      if model.encrypted_vault_key
-        ActiveVault.service.decrypt(model.encrypted_vault_key)
+      if model.encrypted_key
+        ActiveVault.service.decrypt(model.encrypted_key)
       else
         generate_random_key
       end
@@ -26,7 +26,7 @@ module ActiveVault
     private
       # Generates random 32-bytes long key that will encrypt/decrypt
       # attributes. Each db record gets it's own key.
-      # This key is then encrypted with KMS and stored inside `encrypted_vault_key`
+      # This key is then encrypted with KMS and stored inside `encrypted_key`
       # column.
       #
       # Key must be 32-bytes long since aes-256-gcm requires key that

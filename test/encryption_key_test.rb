@@ -15,6 +15,6 @@ class ActiveVault::EncryptionKeyTest < ActiveSupport::TestCase
 
     plaintext_key = ActiveVault::EncryptionKey.for person
 
-    assert_equal ActiveVault.service.decrypt(person.encrypted_vault_key), plaintext_key
+    assert_equal ActiveVault.service.decrypt(person.encrypted_key), plaintext_key
   end
 end
