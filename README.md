@@ -22,8 +22,8 @@ end
 ```ruby
 # db schema
 create_table "people", force: :cascade do |t|
-  t.text "email_ciphertext"
-  t.text "encrypted_vault_key"
+  t.text "email_encrypted"
+  t.text "encrypted_key"
    ...
 end
 ```
