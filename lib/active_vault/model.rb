@@ -28,15 +28,15 @@ module ActiveVault
             attribute name, :string
 
             # Defines setter for virtual attribute. This method performs
-            # encryption of plaintext and handles `encrypted_key`
+            # encryption of value and handles `encrypted_key`
             #
             #   Person.create(email: "dino@exmaple.org") => encrypts email
             define_method "#{name}=" do |value|
               plaintext_key = EncryptionKey.for self
               self.encrypted_key = ActiveVault.service.encrypt(plaintext_key) if self.encrypted_key.blank?
 
-              ciphertext = encrypt key: plaintext_key, value: value
-              send("#{encrypted_attribute}=", ciphertext)
+              encrypted_data = encrypt key: plaintext_key, value: value
+              send("#{encrypted_attribute}=", encrypted_data)
 
               super(value)
             end
@@ -81,14 +81,14 @@ module ActiveVault
     private
       def encrypt(key:, value:)
         return unless value
-        Cipher.new(key).encrypt(value)
+        Encryptor.new(key).encrypt(value)
       end
 
       def decrypt(attribute:)
         key = ActiveVault.service.decrypt(encrypted_key)
-        ciphertext = send(attribute)
+        encrypted_data = send(attribute)
 
-        Cipher.new(key).decrypt(ciphertext)
+        Encryptor.new(key).decrypt(encrypted_data)
       end
 
       def clear_encryption_key

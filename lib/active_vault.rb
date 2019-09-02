@@ -13,7 +13,7 @@ module ActiveVault
   extend ActiveSupport::Autoload
 
   autoload :EncryptionKey
-  autoload :Cipher
+  autoload :Encryptor
   autoload :Service
 
   mattr_accessor :service

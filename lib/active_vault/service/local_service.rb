@@ -6,16 +6,18 @@ module ActiveVault
   #
   # TODO: Research and implement better locale version.
   class Service::LocalService < Service
-    def initialize(key:)
-      @key = key
+    attr_reader :master_key
+
+    def initialize(master_key:)
+      @master_key = master_key
     end
 
-    def encrypt(plaintext)
-      Base64.strict_encode64(plaintext)
+    def encrypt(value)
+      ActiveVault::Encryptor.new(master_key).encrypt(value)
     end
 
-    def decrypt(ciphertext)
-      decode64(ciphertext)
+    def decrypt(encrypted_data)
+      ActiveVault::Encryptor.new(master_key).decrypt(encrypted_data)
     end
   end
 end

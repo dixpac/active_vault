@@ -9,27 +9,27 @@ module ActiveVault
     attr_reader :key_id, :access_key, :secret_access
 
     def initialize(key_id:, access_key:, secret_access:)
-      @key_id       = key_id
-      @access_key   = access_key
-      @secret_access   = secret_access
+      @key_id        = key_id
+      @access_key    = access_key
+      @secret_access = secret_access
     end
 
-    def encrypt(plaintext)
+    def encrypt(value)
       options = {
         key_id: key_id,
-        plaintext: encode64(plaintext)
+        plaintext: encode64(value)
       }
 
-      ciphertext = client.encrypt(options).ciphertext_blob
+      encrypted_data = client.encrypt(options).ciphertext_blob
 
-      encode64(ciphertext)
+      encode64(encrypted_data)
     end
 
-    def decrypt(ciphertext)
-      ciphertext = decode64(ciphertext)
+    def decrypt(encrypted_data)
+      encrypted_data = decode64(encrypted_data)
 
 
-      options = { ciphertext_blob: ciphertext }
+      options = { ciphertext_blob: encrypted_data }
 
       response =
         begin
