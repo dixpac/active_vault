@@ -5,15 +5,16 @@ module ActiveVault
   #
   # The available services are:
   #
-  # * +AWS+,   to manage keys through Amazon KMS.
   # * +Local+, to manage keys through locally.
+  # * +AWS+,   to manage keys through Amazon KMS.
+  # * +Vault+, to manage keys through Hashicorp Vault.
   #
   # Inside a Rails application, you can set-up your services through the
   # generated <tt>config/vault.yml</tt> file and reference one
   # of the aforementioned constant under the +service+ key. For example:
   #
-  #   local:
-  #     service: AWS
+  #   aws:
+  #     service: Aws
   #     key_id: "..."
   #     access_key: "..."
   #     secret_access: "..."

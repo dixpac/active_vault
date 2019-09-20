@@ -10,3 +10,4 @@ gemspec
 gem 'byebug', group: [:development, :test]
 
 gem 'aws-sdk-kms', require: false
+gem 'vault', '~> 0.1', require: false

@@ -1,5 +1,14 @@
+# local:
+#   service: Local
+#   master_key: "..."
+
 # aws:
 #   service: Aws
 #   key_id: "..."
 #   access_key: "..."
-#   secret_access: "..."
+
+# hashicorp:
+#   service: Vault
+#   key_id: "..."
+#   address: "..."
+#   token: "..."
